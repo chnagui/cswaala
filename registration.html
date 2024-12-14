@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Program Enrollment | CSWaala</title>
+    <link rel="icon" type="image/png" href="src/favicon/icon.png">
+    <style>
+        /* Full-Screen Animated Gradient Background */
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            justify-content: flex-start;
+            background: linear-gradient(135deg, rgba(200, 230, 255, 0.8), rgba(220, 245, 240, 0.8), rgba(255, 210, 200, 0.8));
+            background-size: 300% 300%;
+            animation: gradientBackground 12s infinite ease-in-out;
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            width: 90%;
+            max-width: 850px;
+            margin: 20px auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #007bff;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 10px 15px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: #f9f9f9;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #007bff;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        }
+
+        .gender-group {
+            margin-top: 10px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .gender-group input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .button-wrapper {
+            display: flex;
+            justify-content: center;
+            grid-column: span 2;
+        }
+
+        .btn-primary {
+            padding: 10px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 30px;
+            border: none;
+            background: linear-gradient(90deg, #007bff, #00b09b, #ff5722);
+            background-size: 200% 200%;
+            color: white;
+            text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+            transition: background-position 0.5s, transform 0.3s, box-shadow 0.3s;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        .btn-primary:hover {
+            background-position: 100% 0%;
+            transform: translateY(-5px);
+            box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); }
+            50% { transform: scale(1.05); box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.3); }
+        }
+
+        @media (max-width: 768px) {
+            form {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Footer Styling */
+        .footer {
+            background-color: #06038D;
+            padding: 10px 0;
+            text-align: center;
+            margin-top: auto;
+            width: 100%;
+        }
+
+        .footer ul {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .footer p {
+            margin: 0;
+            color: #ffffff;
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Particle Animation -->
+    <canvas id="particleCanvas"></canvas>
+
+    <div class="container">
+        <h1>Program Enrollment</h1>
+        <form id="enrollmentForm" onsubmit="validateForm(event)">
+            <!-- First and Last Name -->
+            <div class="form-group">
+                <label for="firstname">First Name</label>
+                <input type="text" id="firstname" name="firstname" placeholder="Enter your first name" required>
+            </div>
+            <div class="form-group">
+                <label for="lastname">Last Name</label>
+                <input type="text" id="lastname" name="lastname" placeholder="Enter your last name" required>
+            </div>
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            <!-- Phone -->
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" pattern="[0-9]{10}" required>
+            </div>
+            <!-- Date of Birth -->
+            <div class="form-group">
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" name="dob" required>
+            </div>
+            <!-- Gender -->
+            <div class="form-group">
+                <label>Gender</label>
+                <div class="gender-group">
+                    <input type="radio" id="male" name="gender" value="Male" required>Male
+                    <input type="radio" id="female" name="gender" value="Female" required>Female
+                    <input type="radio" id="other" name="gender" value="Other" required>Other
+                </div>
+            </div>
+            <!-- College Name -->
+            <div class="form-group">
+                <label for="collegename">College Name</label>
+                <input type="text" id="collegename" name="collegename" placeholder="Enter your college name" required>
+            </div>
+            <!-- Degree -->
+            <div class="form-group">
+                <label for="degree">Degree</label>
+                <select id="degree" name="degree" required>
+                    <option value="" disabled selected>Select Degree</option>
+                    <option value="B.Tech">B.Tech</option>
+                    <option value="M.Tech">M.Tech</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <!-- Branch -->
+            <div class="form-group">
+                <label for="branch">Branch</label>
+                <select id="branch" name="branch" required>
+                    <option value="" disabled selected>Select Branch</option>
+                    <option value="CS/IT">CS/IT</option>
+                    <option value="EEE/ECE">EEE/ECE</option>
+                    <option value="Mech">Mechanical</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <!-- Graduation Year -->
+            <div class="form-group">
+                <label for="gradyear">Graduation Year</label>
+                <select id="gradyear" name="gradyear" required>
+                    <option value="" disabled selected>Select Year</option>
+                    <script>
+                        for (let year = 2025; year <= 2030; year++) {
+                            document.write(`<option value="${year}">${year}</option>`);
+                        }
+                    </script>
+                </select>
+            </div>
+            <!-- Program -->
+            <div class="form-group full-width">
+                <label for="program">Select Program</label>
+                <select id="program" name="program" required>
+                    <option value="" disabled selected>Select Program</option>
+                    <option value="Android_Web">Android & Web Developer Intern 1 Month - ₹2000/-</option>
+                </select>
+            </div>
+            <!-- Referral Code -->
+            <div class="form-group full-width">
+                <label for="referral">Referral Code (Optional)</label>
+                <input type="text" id="referral" name="referral" placeholder="Enter referral code">
+            </div>
+            <!-- Submit Button -->
+            <div class="button-wrapper">
+                <button type="submit" class="btn-primary">Proceed to Payment</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <ul>
+            <li><a href="aboutus.html">About Us</a></li>
+            <li><a href="contactus.html">Contact Us</a></li>
+            <li><a href="privacypolicy.html">Privacy Policy</a></li>
+            <li><a href="terms&refund.html">Terms & Refunds</a></li>
+        </ul>
+        <p>&copy; 2024 CSWaala. All Rights Reserved.</p>
+    </div>
+
+    <script>
+        // Particle Animation Script
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        const colors = ['rgba(0, 123, 255, 0.7)', 'rgba(0, 176, 155, 0.7)', 'rgba(255, 87, 34, 0.7)'];
+
+        class Particle {
+            constructor(x, y, size, color, speedX, speedY) {
+                this.x = x;
+                this.y = y;
+                this.size = size;
+                this.color = color;
+                this.speedX = speedX;
+                this.speedY = speedY;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+            }
+        }
+
+        function initParticles() {
+            for (let i = 0; i < 100; i++) {
+                const size = Math.random() * 2 + 1;
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const speedX = (Math.random() - 0.5) * 2;
+                const speedY = (Math.random() - 0.5) * 2;
+
+                particles.push(new Particle(x, y, size, color, speedX, speedY));
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        initParticles();
+        animateParticles();
+    </script>
+</body>
+</html>
